@@ -1,6 +1,14 @@
 defmodule LabWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :lab
 
+  # pipeline :protect do
+  #   plug :authenticate
+  # end
+
+  # defp authenticate(conn, _) do
+  #   halt()
+  # end
+
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
@@ -47,4 +55,15 @@ defmodule LabWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug LabWeb.Router
+  plug :introspect
+
+  def introspect(conn, _params) do
+    IO.puts """
+    Verb: #{inspect(conn.method)}
+    Host: #{inspect(conn.host)}
+    Headers: #{inspect(conn.req_headers)}
+    Locale: #{inspect(conn.assigns.locale)}
+    """
+    conn
+  end
 end
